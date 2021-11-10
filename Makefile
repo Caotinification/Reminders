@@ -1,7 +1,16 @@
 EXE_NAME = reminder
-FILES = Date.cpp main.cpp
+FILES = main.cpp Date.cpp
+OBJ_FILES = Date.o main.o
 CC = g++
-FLAGS = -Wall -o $(reminder) -pedantic -Wfatal-errors
+FLAGS = -Wall -pedantic -Wfatal-errors
 
-compile:$(FILES)
-	$(CC) -c $(FILES)
+make: main.o Date.o
+	$(CC) -o $(EXE_NAME) $(OBJ_FILES)
+main.o: main.cpp Date.cpp Date.hpp
+	$(CC) $(FLAGS) -c main.cpp Date.cpp Date.hpp
+Date.o: Date.cpp Date.hpp
+	$(CC) $(FLAGS) -c Date.cpp Date.hpp
+run:
+	./$(EXE_NAME)
+clean:
+	rm $(EXE_NAME) *.o
