@@ -1,0 +1,23 @@
+Now the Date class has been finished, next:
+
+1. Program has to find way to read or save reminders when requested
+    a. Problem: How to determine whether to save or read a reminder?
+    b. Solutions:
+        I. Specified in command line, have user request modes?
+        II. Specified through user input, have user request modes?
+
+2. Program has to find way to not overwrite data in text file when saving
+    a. Problem: How should this be done to ensure no overwrite?
+    b. Solutions:
+        I. Need some sort of way to format data in chunks. Consider lowest part of file most recent entry?
+        II. Consider highest part of file most recent entry?
+        III. Need markers to determine unique chunks of data
+
+3. Program has to find way to format date data
+    a. Problem: How should data be formatted in file?
+    b. Solutions:
+        I. Format:
+            All dates formatted as: [dd/mm/yyyy]
+            Date of entry at top of every entry formatted as ddmmyyyy
+            Numbered entries following: 1. date1->reminder, 2. date2->reminder, etc...
+    

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <chrono>
-#include <stdexcept>
 
 #include "Date.hpp"
 
@@ -8,7 +7,7 @@ typedef std::tm DateParts;
 
 using namespace DateAccessories;
 
-static DateParts* GetToday() {
+DateParts* GetToday() {
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
     return std::localtime(&now_c);
@@ -17,18 +16,26 @@ static DateParts* GetToday() {
 Date::Date() {
 	DateParts* today = GetToday();
     d = today->tm_mday;
-    m = today->tm_mon + 1; // 0-11 months
+    m = today->tm_mon; // 0-11 months
     y = today->tm_year + 1900; // years since 1900
 }
 
-string Date::GetDayOfWeek() const { //calculated using Zeller's Rule
-    int offsetedMonth = (m + MAX_MONTHS - 1) % (MAX_MONTHS + 1); // this makes march the first month, and feburary the last
-    int millenium = y % 1000;
-    int year = y - millenium;
-
-    int weekday = d + ((MAX_MONTHS + 1) * offsetedMonth - 1)/5.0 + year + static_cast<double>(millenium)/2.0 + static_cast<double>(year)/2.0 - (2*year);
-    
-    return DayNames[weekday - 1];
+string Date::GetDayOfWeek() const { //calculated using Zeller's Congruence
+    int day = d, month = m + 1, year = y % 100;
+    int century = y - year;
+    int weekday = 0;
+    switch(month) {
+    case 1:
+        month = 13;
+        year--;
+        break;
+    case 2:
+        month = 14;
+        year--;
+        break;
+    }
+    weekday = day + 13 * (month + 1) / 5 + year + (y + century)/4 + 5*year;
+    return DayNames[weekday % 7];
 }
 
 Date& Date::ChangeDate(int day, int month/*= 0*/, int year/*= 0*/){
@@ -71,6 +78,6 @@ Date& Date::operator--(){
     return *this;
 }
 
-bool Date::checkLeapYear() {
-    return isLeapYear = y % 4 == 0;
+void Date::checkLeapYear() {
+    isLeapYear = y % 4 == 0;
 }
